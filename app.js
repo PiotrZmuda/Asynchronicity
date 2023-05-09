@@ -1,54 +1,76 @@
-//2
+
 const BASE_URL = "https://swapi.dev/api/";
 
-//robimy sobie stan aplikacji
 const state = {
   collections: null,
   collectionsData: {},
 };
 
-//4 teraz 1
-//dodajemy do fetchData key by za każdym razem zachowywać sobie dane
-async function fetchData(url,key) { 
-  const respons = await fetch(url);
-  const data = await respons.json();
-
-  displayButtons(data);
-  state.collections === data; // prypisujemy dane do kolekcji state powyżej
+async function fetchData(url, key) {
+  const response = await fetch(url);
+  const data = await response.json();
+  addToState(state, key, data);
+  console.log("state", state);
 }
 
-//3
+function addToState(object, key, data) {
+  // console.log("object", object);
+  // console.log("key", key);
+  // console.log("data", data);
+
+  const keys = key.split(".");
+  let currentObject = object;
+
+  if (!data.results) {
+    keys.forEach((k, i) => {
+      console.log(k, i);
+      if (!currentObject[k]) {
+        currentObject[k] = {};
+      }
+      console.log();
+      if (i === keys.length - 1) {
+        currentObject[k] = data;
+      }
+    });
+  } else if (data.results) {
+    currentObject.collectionsData[key] = data.results;
+  }
+}
+
 function displayButtons(collectionList) {
-  const $buttons = document.getElementById("buttons"); // kotwica do buttons
+  const $buttons = document.getElementById("buttons");
   Object.entries(collectionList).forEach(([key, value]) => {
-    // funkcja która przyjmuje object i wyciąga z niego wpis któym jest para klucz wartośc
     const $btn = document.createElement("button");
     $btn.innerHTML = key;
-    $btn.addEventListener("click", () => {
-      // w momencie kiedy klikniemyu na button wywoła się funkcja nr 4 teraz 1 (jest ona asynhroniczna)
+    $btn.addEventListener("click", async () => {
+      await fetchData(value, key);
+      displayList(key);
     });
     $buttons.appendChild($btn);
-
-    console.log("key", key);
-    console.log("value", value);
+    // console.log("key", key);
+    // console.log("value", value);
   });
 }
 
-fetchData(BASE_URL)
+function displayList(collectionKey) {
+  const $list = document.getElementById("list");
+  $list.innerHTML = "";
 
+  const data = state.collectionsData[collectionKey];
+  if (data) {
+    const $ul = document.createElement("ul");
 
+    data.forEach((item) => {
+      const $li = document.createElement("li");
+      $li.innerText = item.name || item.title;
+      $ul.appendChild($li);
+    });
 
+    $list.appendChild($ul);
+  }
+}
 
-// //1
-// //jeżeli używamy fetch to musimy użyć 2 then
-// // themy robimy wtedy gdzy mamy promise i czekamy na jakieś dane asynchorniczne które nie wiadomo ile będą trwały
-// const promise = fetch(BASE_URL)
-//   .then((respons) => respons.json())
-//   .then((data) => {
-//     displayButtons(data)
-//     state.collections === data})  // prypisujemy dane do kolekcji state powyżej
-//   .catch((error) => {
-//     console.log("error", error);
-//   });
-
-// //106
+(async function main() {
+  await fetchData(BASE_URL, "collections");
+  displayButtons(state.collections);
+})();
