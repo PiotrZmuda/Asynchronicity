@@ -47,11 +47,12 @@ function displayButtons(collectionList) {
       displayList(key);
     });
     $buttons.appendChild($btn);
+    $buttons.classList.add("radomClass")
     // console.log("key", key);
     // console.log("value", value);
   });
 }
-
+// lista2
 function displayList(collectionKey) {
   const $list = document.getElementById("list");
   $list.innerHTML = "";
@@ -69,6 +70,32 @@ function displayList(collectionKey) {
     $list.appendChild($ul);
   }
 }
+
+// function displayList(collectionKey) {
+//   const $list = document.getElementById("list");
+//   $list.innerHTML = "";
+
+//   const data = state.collectionsData[collectionKey];
+//   if (data) {
+//     const $ul = document.createElement("ul");
+
+//     data.forEach((item) => {
+//       const $li = document.createElement("li");
+//       const $pre = document.createElement("pre");
+
+//       for (let prop in item) {
+//         const $prop = document.createElement("p");
+//         $prop.innerText = `${prop}: ${item[prop]}`;
+//         $pre.appendChild($prop);
+//       }
+
+//       $li.appendChild($pre);
+//       $ul.appendChild($li);
+//     });
+
+//     $list.appendChild($ul);
+//   }
+// }
 
 (async function main() {
   await fetchData(BASE_URL, "collections");
