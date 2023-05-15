@@ -1,4 +1,3 @@
-
 const BASE_URL = "https://swapi.dev/api/";
 
 const state = {
@@ -14,14 +13,15 @@ async function fetchData(url, key) {
 }
 
 function addToState(object, key, data) {
-  // console.log("object", object);
-  // console.log("key", key);
-  // console.log("data", data);
+  console.log("object", object);
+  console.log("key", key);
+  console.log("data", data);
 
-  const keys = key.split(".");
-  let currentObject = object;
+  const keys = key.split("."); //key na pojedyncze klucze za pomocą metody split() i zapisanie ich do tablicy keys
+  let currentObject = object; //ustawiana jest na obiekt object.
 
   if (!data.results) {
+    //Jeśli dane przekazane do funkcji nie zawierają klucza results funkcja iteruje po wszystkich kluczach keys
     keys.forEach((k, i) => {
       console.log(k, i);
       if (!currentObject[k]) {
@@ -47,12 +47,12 @@ function displayButtons(collectionList) {
       displayList(key);
     });
     $buttons.appendChild($btn);
-    $buttons.classList.add("radomClass")
+    // $buttons.classList.add("radomClass")
     // console.log("key", key);
     // console.log("value", value);
   });
 }
-// lista2
+
 function displayList(collectionKey) {
   const $list = document.getElementById("list");
   $list.innerHTML = "";
@@ -64,38 +64,43 @@ function displayList(collectionKey) {
     data.forEach((item) => {
       const $li = document.createElement("li");
       $li.innerText = item.name || item.title;
+      console.log("item", item)
+
+      const $detailsBtn = document.createElement("button")
+      $detailsBtn.innerText = "info";
+      $detailsBtn.addEventListener("click", () => {
+        displayDetails(item)
+      })
+      $li.appendChild($detailsBtn);
       $ul.appendChild($li);
     });
-
     $list.appendChild($ul);
   }
 }
 
-// function displayList(collectionKey) {
-//   const $list = document.getElementById("list");
-//   $list.innerHTML = "";
+function displayDetails(item) {
+  const $details = document.getElementById("details");
+  $details.innerHTML = "";
 
-//   const data = state.collectionsData[collectionKey];
-//   if (data) {
-//     const $ul = document.createElement("ul");
+  const $h2 = document.createElement("h2");
+  $h2.innerText = item.name || item.title;
+  $details.appendChild($h2);
 
-//     data.forEach((item) => {
-//       const $li = document.createElement("li");
-//       const $pre = document.createElement("pre");
+  const $table = document.createElement("table");
+  const keys = Object.keys(item);
+  keys.forEach((key) => {
+    const $tr = document.createElement("tr");
+    const $td1 = document.createElement("td");
+    $td1.innerText = key;
+    const $td2 = document.createElement("td");
+    $td2.innerText = item[key];
+    $tr.appendChild($td1);
+    $tr.appendChild($td2);
+    $table.appendChild($tr);
+  });
+  $details.appendChild($table);
+}
 
-//       for (let prop in item) {
-//         const $prop = document.createElement("p");
-//         $prop.innerText = `${prop}: ${item[prop]}`;
-//         $pre.appendChild($prop);
-//       }
-
-//       $li.appendChild($pre);
-//       $ul.appendChild($li);
-//     });
-
-//     $list.appendChild($ul);
-//   }
-// }
 
 (async function main() {
   await fetchData(BASE_URL, "collections");
