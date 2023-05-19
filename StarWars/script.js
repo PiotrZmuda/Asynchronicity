@@ -3,6 +3,7 @@ const SWAPI_URL = "https://swapi.dev/api/";
 //stan aplikacji
 
 let page = 1;
+let hederAdded = false;
 
 //fetch głównych danych
 
@@ -53,6 +54,7 @@ const printChart = (val, category) => {
   const chart_container = document.getElementById("chart_container");
 
   chart_container.innerHTML = "";
+  hederAdded = false // --------------------------------
 
   let html = "";
   val.forEach((element, index) => {
@@ -148,12 +150,12 @@ class Films {
 
 class Species {
   constructor(
-    { name, average_lifespa, skin_colors, language, created },
+    { name, average_lifespan, skin_colors, language, created },
     index
   ) {
     this.index = index;
     this.name = name;
-    this.average_lifespa = average_lifespa;
+    this.average_lifespan = average_lifespan;
     this.skin_colors = skin_colors;
     this.language = language;
     this.created = created;
@@ -163,7 +165,7 @@ class Species {
     return `<tr id="rowPerson${this.index}">
     <td>${this.index}</td>
     <td>${this.name}</td>
-    <td>${this.average_lifespa}</td>
+    <td>${this.average_lifespan}</td>
     <td>${this.skin_colors}</td>
     <td>${this.language}</td>
     <td>${new Date(this.created).toLocaleDateString()}</td>
@@ -237,24 +239,102 @@ class Starships {
 const fillCategotyWithData = (val, index, category) => {
   let html = "";
 
-  switch (true) {
-    case category === "people":
-      const people = new Person(val, index);
-      return (html += people.toHTML());
-    case category === "planets":
-      const planets = new Planets(val, index);
-      return (html += planets.toHTML());
-    case category === "films":
-      const films = new Films(val, index);
-      return (html += films.toHTML());
-    case category === "species":
-      const species = new Species(val, index);
-      return (html += species.toHTML());
-    case category === "vehicles":
-      const vehicles = new Vehicles(val, index);
-      return (html += vehicles.toHTML());
-    case category === "starships":
-      const starships = new Starships(val, index);
-      return (html += starships.toHTML());
-  }
-};
+  const addHeader = (flag) => {//flaga logiczna nagłówek
+    if(!flag){
+      switch (true) {
+        case category === "people":
+          html += `<tr> 
+      <th>id</th>
+      <th>name</th>
+      <th>birth</th>
+      <th>gender</th>
+      <th>heigth</th>
+      <th>created</th>
+      <tr>`;
+          break;
+        case category === "planets":
+          html += `<tr> 
+        <th>id</th>
+        <th>name</th>
+        <th>climate</th>
+        <th>terrain</th>
+        <th>diameter</th>
+        <th>created</th>
+        <tr>`;
+          break;
+        case category === "films":
+          html += `<tr> 
+        <th>id</th>
+        <th>title</th>
+        <th>director</th>
+        <th>producer</th>
+        <th>release_date</th>
+        <th>created</th>
+        <tr>`;
+          break;
+          case category === "species":
+          html += `<tr> 
+        <th>id</th>
+        <th>name</th>
+        <th>average_lifespan</th>
+        <th>skin_colors</th>
+        <th>language</th>
+        <th>created</th>
+        <tr>`;
+          break;
+        case category === "vehicles":
+          html += `<tr> 
+          <th>id</th>
+          <th>name</th>
+          <th>model</th>
+          <th>length</th>
+          <th>crew</th>
+          <th>created</th>
+          <tr>`;
+          break;
+        case category === "starships":
+          html += `<tr> 
+            <th>id</th>
+            <th>name</th>
+            <th>length</th>
+            <th>max_atmosphering_speed</th>
+            <th>passengers</th>
+            <th>created</th>
+            <tr>`;
+          break;
+      }
+    }
+  
+      hederAdded = true;
+    };
+  
+    switch (true) {
+      case category === "people":
+        const people = new Person(val, index);
+        addHeader(hederAdded);
+        return (html += people.toHTML());
+      case category === "planets":
+        const planets = new Planets(val, index);
+        addHeader(hederAdded);
+        return (html += planets.toHTML());
+      case category === "films":
+        const films = new Films(val, index);
+        addHeader(hederAdded);
+        return (html += films.toHTML());
+      case category === "species":
+        const species = new Species(val, index);
+        addHeader(hederAdded);
+        return (html += species.toHTML());
+      case category === "vehicles":
+        const vehicles = new Vehicles(val, index);
+        addHeader(hederAdded);
+        return (html += vehicles.toHTML());
+      case category === "starships":
+        const starships = new Starships(val, index);
+        addHeader(hederAdded);
+        return (html += starships.toHTML());
+    }
+  };
+  
+
+    
