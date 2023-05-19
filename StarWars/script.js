@@ -1,4 +1,4 @@
-  const SWAPI_URL = "https://swapi.dev/api/";
+const SWAPI_URL = "https://swapi.dev/api/";
 
 //stan aplikacji
 
@@ -41,7 +41,7 @@ const generateButton = async () => {
       const fetchData = await getData(names[i], page);
       console.log("fetchData", fetchData);
       //rendering
-      printChart(fetchData);
+      printChart(fetchData, names[i]);
     });
 
     buttons.appendChild(navButton);
@@ -49,16 +49,17 @@ const generateButton = async () => {
 };
 
 //funkcja rednderująca tablicę
-const printChart = (val) => {
+const printChart = (val, category) => {
   const chart_container = document.getElementById("chart_container");
 
   chart_container.innerHTML = "";
 
   let html = "";
-  val.forEach((element, index) => {//element poj obiekt z tabicy
-    html += fillCategotyWithData(element, index);
+  val.forEach((element, index) => {
+    //element poj obiekt z tabicy
+    html += fillCategotyWithData(element, index, category);
   });
-  chart_container.innerHTML = html
+  chart_container.innerHTML = html;
 };
 
 generateButton();
@@ -68,13 +69,13 @@ class Person {
   constructor({ name, birth_year, gender, height, created }, index) {
     this.index = index;
     this.name = name;
-    this.birth_year = birth_year
-    this.gender = gender
-    this.height = height
-    this.created = created
+    this.birth_year = birth_year;
+    this.gender = gender;
+    this.height = height;
+    this.created = created;
   }
-  //metoda tzn funkcja która jest w obiekcie 
-  toHTML(){
+  //metoda tzn funkcja która jest w obiekcie
+  toHTML() {
     return `<tr id="rowPerson${this.index}">
     <td>${this.index}</td>
     <td>${this.name}</td>
@@ -83,17 +84,177 @@ class Person {
     <td>${this.height}</td>
     <td>${new Date(this.created).toLocaleDateString()}</td>
     <td><button class="details person index"${
-        this.index
+      this.index
     }">details</button><button class="delete person index${
-        this.index
+      this.index
     }">delete</button></td>
-    </tr>`
+    </tr>`;
+  }
+}
+
+class Planets {
+  constructor({ name, climate, terrain, diameter, created }, index) {
+    this.index = index;
+    this.name = name;
+    this.climate = climate;
+    this.terrain = terrain;
+    this.diameter = diameter;
+    this.created = created;
+  }
+  //metoda tzn funkcja która jest w obiekcie
+  toHTML() {
+    return `<tr id="rowPerson${this.index}">
+    <td>${this.index}</td>
+    <td>${this.name}</td>
+    <td>${this.climate}</td>
+    <td>${this.terrain}</td>
+    <td>${this.diameter}</td>
+    <td>${new Date(this.created).toLocaleDateString()}</td>
+    <td><button class="details person index"${
+      this.index
+    }">details</button><button class="delete person index${
+      this.index
+    }">delete</button></td>
+    </tr>`;
+  }
+}
+
+class Films {
+  constructor({ title, director, producer, release_date, created }, index) {
+    this.index = index;
+    this.title = title;
+    this.director = director;
+    this.producer = producer;
+    this.release_date = release_date;
+    this.created = created;
+  }
+  //metoda tzn funkcja która jest w obiekcie
+  toHTML() {
+    return `<tr id="rowPerson${this.index}">
+    <td>${this.index}</td>
+    <td>${this.title}</td>
+    <td>${this.director}</td>
+    <td>${this.producer}</td>
+    <td>${this.release_date}</td>
+    <td>${new Date(this.created).toLocaleDateString()}</td>
+    <td><button class="details person index"${
+      this.index
+    }">details</button><button class="delete person index${
+      this.index
+    }">delete</button></td>
+    </tr>`;
+  }
+}
+
+class Species {
+  constructor(
+    { name, average_lifespa, skin_colors, language, created },
+    index
+  ) {
+    this.index = index;
+    this.name = name;
+    this.average_lifespa = average_lifespa;
+    this.skin_colors = skin_colors;
+    this.language = language;
+    this.created = created;
+  }
+  //metoda tzn funkcja która jest w obiekcie
+  toHTML() {
+    return `<tr id="rowPerson${this.index}">
+    <td>${this.index}</td>
+    <td>${this.name}</td>
+    <td>${this.average_lifespa}</td>
+    <td>${this.skin_colors}</td>
+    <td>${this.language}</td>
+    <td>${new Date(this.created).toLocaleDateString()}</td>
+    <td><button class="details person index"${
+      this.index
+    }">details</button><button class="delete person index${
+      this.index
+    }">delete</button></td>
+    </tr>`;
+  }
+}
+
+class Vehicles {
+  constructor({ name, model, length, crew, created }, index) {
+    this.index = index;
+    this.name = name;
+    this.model = model;
+    this.length = length;
+    this.crew = crew;
+    this.created = created;
+  }
+  //metoda tzn funkcja która jest w obiekcie
+  toHTML() {
+    return `<tr id="rowPerson${this.index}">
+    <td>${this.index}</td>
+    <td>${this.name}</td>
+    <td>${this.model}</td>
+    <td>${this.length}</td>
+    <td>${this.crew}</td>
+    <td>${new Date(this.created).toLocaleDateString()}</td>
+    <td><button class="details person index"${
+      this.index
+    }">details</button><button class="delete person index${
+      this.index
+    }">delete</button></td>
+    </tr>`;
+  }
+}
+
+class Starships {
+  constructor(
+    { name, length, max_atmosphering_speed, passengers, created },
+    index
+  ) {
+    this.index = index;
+    this.name = name;
+    this.length = length;
+    this.max_atmosphering_speed = max_atmosphering_speed;
+    this.passengers = passengers;
+    this.created = created;
+  }
+  //metoda tzn funkcja która jest w obiekcie
+  toHTML() {
+    return `<tr id="rowPerson${this.index}">
+    <td>${this.index}</td>
+    <td>${this.name}</td>
+    <td>${this.length}</td>
+    <td>${this.max_atmosphering_speed}</td>
+    <td>${this.passengers}</td>
+    <td>${new Date(this.created).toLocaleDateString()}</td>
+    <td><button class="details person index"${
+      this.index
+    }">details</button><button class="delete person index${
+      this.index
+    }">delete</button></td>
+    </tr>`;
   }
 }
 
 //funkcja wprowadzająca dane
-const fillCategotyWithData = (val, index) => {
-    let html = ""
-    const person = new Person(val, index)
-    return (html += person.toHTML())
+const fillCategotyWithData = (val, index, category) => {
+  let html = "";
+
+  switch (true) {
+    case category === "people":
+      const people = new Person(val, index);
+      return (html += people.toHTML());
+    case category === "planets":
+      const planets = new Planets(val, index);
+      return (html += planets.toHTML());
+    case category === "films":
+      const films = new Films(val, index);
+      return (html += films.toHTML());
+    case category === "species":
+      const species = new Species(val, index);
+      return (html += species.toHTML());
+    case category === "vehicles":
+      const vehicles = new Vehicles(val, index);
+      return (html += vehicles.toHTML());
+    case category === "starships":
+      const starships = new Starships(val, index);
+      return (html += starships.toHTML());
+  }
 };
