@@ -3,7 +3,38 @@ const SWAPI_URL = "https://swapi.dev/api/";
 //stan aplikacji
 
 let page = 1;
+let startingIndex = 1;
 let hederAdded = false;
+let currentCategory = "";
+
+//paginacja
+const pages = document.getElementById("pages");
+
+//prev
+let prevButton = document.createElement("button");
+let prevText = document.createTextNode("Prev");
+prevButton.append(prevText);
+pages.appendChild(prevButton);
+
+//next
+let nextButton = document.createElement("button");
+let nextText = document.createTextNode("next");
+nextButton.append(nextText);
+pages.appendChild(nextButton);
+
+const refreshPage = () => {
+  if (currentCategory === "") {
+    prevButton.disabled = true;
+    nextButton.disabled = true;
+  } else {
+    prevButton.disabled = false;
+    nextButton.disabled = false;
+  }
+  if (page <= 1) {
+    prevButton.disabled = true;
+  } else prevButton.disabled = false;
+};
+refreshPage();
 
 //fetch głównych danych
 
@@ -17,7 +48,7 @@ const getButtons = async () => {
 //fetch zawartości
 
 const getData = async (category, page) => {
-  const response = await fetch(`${SWAPI_URL}/${category}/?pages${page}`);
+  const response = await fetch(`${SWAPI_URL}/${category}/?page=${page}`);
   const data = await response.json();
   const results = data.results;
   return results;
@@ -39,9 +70,12 @@ const generateButton = async () => {
     //logika po wciśnieciu przycisku
 
     navButton.addEventListener("click", async () => {
+      currentCategory = names[i];
       const fetchData = await getData(names[i], page);
-      console.log("fetchData", fetchData);
       //rendering
+      page = 1;
+      refreshPage();
+
       printChart(fetchData, names[i]);
     });
 
@@ -49,17 +83,20 @@ const generateButton = async () => {
   }
 };
 
-//funkcja rednderująca tablicę
+//funkcja renderująca tablicę
 const printChart = (val, category) => {
   const chart_container = document.getElementById("chart_container");
 
   chart_container.innerHTML = "";
-  hederAdded = false // --------------------------------
-
+  hederAdded = false; // --------------------------------
   let html = "";
   val.forEach((element, index) => {
     //element poj obiekt z tabicy
-    html += fillCategotyWithData(element, index, category);
+    html += fillCategotyWithData(
+      element,
+      (index = index + startingIndex),
+      category
+    );
   });
   chart_container.innerHTML = html;
 };
@@ -239,8 +276,9 @@ class Starships {
 const fillCategotyWithData = (val, index, category) => {
   let html = "";
 
-  const addHeader = (flag) => {//flaga logiczna nagłówek
-    if(!flag){
+  const addHeader = (flag) => {
+    //flaga logiczna nagłówek
+    if (!flag) {
       switch (true) {
         case category === "people":
           html += `<tr> 
@@ -272,7 +310,7 @@ const fillCategotyWithData = (val, index, category) => {
         <th>created</th>
         <tr>`;
           break;
-          case category === "species":
+        case category === "species":
           html += `<tr> 
         <th>id</th>
         <th>name</th>
@@ -304,37 +342,59 @@ const fillCategotyWithData = (val, index, category) => {
           break;
       }
     }
-  
-      hederAdded = true;
-    };
-  
-    switch (true) {
-      case category === "people":
-        const people = new Person(val, index);
-        addHeader(hederAdded);
-        return (html += people.toHTML());
-      case category === "planets":
-        const planets = new Planets(val, index);
-        addHeader(hederAdded);
-        return (html += planets.toHTML());
-      case category === "films":
-        const films = new Films(val, index);
-        addHeader(hederAdded);
-        return (html += films.toHTML());
-      case category === "species":
-        const species = new Species(val, index);
-        addHeader(hederAdded);
-        return (html += species.toHTML());
-      case category === "vehicles":
-        const vehicles = new Vehicles(val, index);
-        addHeader(hederAdded);
-        return (html += vehicles.toHTML());
-      case category === "starships":
-        const starships = new Starships(val, index);
-        addHeader(hederAdded);
-        return (html += starships.toHTML());
-    }
-  };
-  
 
-    
+    hederAdded = true;
+  };
+
+  switch (true) {
+    case category === "people":
+      const people = new Person(val, index);
+      addHeader(hederAdded);
+      return (html += people.toHTML());
+    case category === "planets":
+      const planets = new Planets(val, index);
+      addHeader(hederAdded);
+      return (html += planets.toHTML());
+    case category === "films":
+      const films = new Films(val, index);
+      addHeader(hederAdded);
+      return (html += films.toHTML());
+    case category === "species":
+      const species = new Species(val, index);
+      addHeader(hederAdded);
+      return (html += species.toHTML());
+    case category === "vehicles":
+      const vehicles = new Vehicles(val, index);
+      addHeader(hederAdded);
+      return (html += vehicles.toHTML());
+    case category === "starships":
+      const starships = new Starships(val, index);
+      addHeader(hederAdded);
+      return (html += starships.toHTML());
+  }
+};
+
+//info
+let pagination = document.createElement("p");
+pages.appendChild(pagination);
+
+//logika next
+nextButton.addEventListener("click", async () => {
+  page++;
+  startingIndex += 10;
+  refreshPage();
+  console.log(page);
+  const fetchData = await getData(currentCategory, page);
+  hederAdded = false; // =
+  printChart(fetchData, currentCategory);
+});
+
+//logika prev
+prevButton.addEventListener("click", async () => {
+  page--;
+  startingIndex -= 10;
+  refreshPage();
+  const fetchData = await getData(currentCategory, page);
+  hederAdded = false; // =
+  printChart(fetchData, currentCategory);
+});
